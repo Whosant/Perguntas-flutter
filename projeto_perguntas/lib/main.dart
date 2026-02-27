@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import './questao.dart';
 import './resposta.dart';
 
-import 'package:flutter/material.dart';
-import './questao.dart';
-import './resposta.dart';
-
 void main() {
   runApp(const PerguntaApp());
 }
@@ -28,6 +24,12 @@ class _PerguntaAppState extends State<PerguntaApp> {
     });
   }
 
+  void _reiniciarQuestionario() {
+    setState(() {
+      _perguntaSelecionada = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Map<String, Object>> perguntas = [
@@ -41,35 +43,58 @@ class _PerguntaAppState extends State<PerguntaApp> {
       },
       {
         'texto': 'Qual sua comida favorita?',
-        'resposta': ['Pizza', 'Macarrão', 'Lasanha', 'Prefiro Doce'],
+        'resposta': ['Pizza', 'Macarrão', 'Lasanha', 'Prefiro Doce🤤🧁'],
       },
     ];
+
+    final bool temPerguntaSelecionada =
+        _perguntaSelecionada < perguntas.length;
 
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Perguntas'),
+          centerTitle: true,
         ),
-        body: _perguntaSelecionada < perguntas.length
-            ? Column(
-                children: [
-                  Questao(
-                    perguntas[_perguntaSelecionada]['texto'] as String,
-                  ),
-                  ...(perguntas[_perguntaSelecionada]['resposta']
-                          as List<String>)
-                      .map((resp) {
-                    return Resposta(
-                      texto: resp,
-                      quandoSelecionado: _responder,
-                    );
-                  }).toList(),
-                ],
+        body: temPerguntaSelecionada
+            ? Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Questao(
+                      perguntas[_perguntaSelecionada]['texto'] as String,
+                    ),
+                    const SizedBox(height: 20),
+                    ...(perguntas[_perguntaSelecionada]['resposta']
+                            as List<String>)
+                        .map((resp) {
+                      return Resposta(
+                        texto: resp,
+                        quandoSelecionado: _responder,
+                      );
+                    }).toList(),
+                  ],
+                ),
               )
-            : const Center(
-                child: Text(
-                  'Fim das perguntas!',
-                  style: TextStyle(fontSize: 22),
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Fim das perguntas!',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _reiniciarQuestionario,
+                      child: const Text('Reiniciar'),
+                     
+                    ),
+                  ],
                 ),
               ),
       ),

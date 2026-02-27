@@ -4,7 +4,7 @@ class Resposta extends StatelessWidget {
   final String texto;
   final void Function() quandoSelecionado;
 
-  const Resposta({
+  const Resposta ({
     super.key,
     required this.texto,
     required this.quandoSelecionado,
